@@ -1,0 +1,3 @@
+cluster.name: docker-packagebeat
+node.name: docker-packagebeat-00
+network.host: _non_loopback_
