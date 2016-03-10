@@ -65,8 +65,8 @@ func TestParseOutput(t *testing.T) {
 	var output = `Desired=Unknown/Install/Remove/Purge/Hold
 | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
 |/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
-||/ Name           Version      Architecture Description
-+++-==============-============-============-=================================
+||/ Name                     Version                  Architecture Description
++++-========================-========================-============-======================================================================
 ii  acl            2.2.52-1     amd64        Access control list utilities`
 	pkgs := parseOutput(mockOutput(output))
 	pkg, ok := <-pkgs

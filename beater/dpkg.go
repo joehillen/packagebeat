@@ -58,7 +58,7 @@ func parseOutput(output io.ReadCloser) chan dpkgPackage {
 	go func() {
 		for scanner.Scan() {
 			// skip first 4 lines of the header lines
-			if cnt < 4 {
+			if cnt < 5 {
 				cnt += 1
 				continue
 			}
@@ -74,7 +74,7 @@ func parseOutput(output io.ReadCloser) chan dpkgPackage {
 }
 
 func (pb *Packagebeat) CollectDpkg() error {
-	logp.Debug("packagebeat", "Collection packages")
+	logp.Info("packagebeat", "Collection packages from dpkg")
 
 	dpkg := exec.Command(DPKG_PATH, "--list")
 	dpkgOutput, err := dpkg.StdoutPipe()
