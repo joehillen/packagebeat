@@ -21,3 +21,10 @@ debian:
     - .:/mnt/packagebeat:ro
   links:
     - elasticsearch
+
+fedora:
+  build: docker-compose.d/fedora
+  volumes:
+    - .:/mnt/packagebeat:ro
+  links:
+    - elasticsearch
