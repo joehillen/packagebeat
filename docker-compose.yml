@@ -28,3 +28,10 @@ fedora:
     - .:/mnt/packagebeat:ro
   links:
     - elasticsearch
+
+centos:
+  build: docker-compose.d/centos
+  volumes:
+    - .:/mnt/packagebeat:ro
+  links:
+    - elasticsearch
