@@ -48,6 +48,7 @@ func (pb *Packagebeat) Setup(b *beat.Beat) error {
 func (pb *Packagebeat) Run(b *beat.Beat) error {
 	for {
 		pb.CollectDpkg()
+		pb.CollectRPM()
 		time.Sleep(pb.period)
 	}
 }

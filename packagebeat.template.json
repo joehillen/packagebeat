@@ -10,7 +10,7 @@
       "dynamic_templates": [
         {
           "description": {
-            "match": "description",
+            "match": "summary",
             "mapping": {
               "index": "analyzed",
               "type": "{dynamic_type}"
