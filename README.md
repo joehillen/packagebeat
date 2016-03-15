@@ -6,7 +6,6 @@ from package managers and shipping it to [Elasticsearch](https://www.elastic.co/
 
 Package Managers
 =====================
-
 Packagebeat currently supports the following package managers:
 
  * dpkg (Debian, Ubuntu)
@@ -25,12 +24,10 @@ with hopes for supporting the following
 
 Download
 ==========
-
 Binaries are available on the [releases page](https://github.com/joehillen/packagebeat/releases).
 
 Install
 =========
-
 The release package contains the following:
 
  * `packagebeat` binary
@@ -50,7 +47,6 @@ packagebeat -c /etc/packagebeat/packagebeat.yml
 
 Data
 =====
-
 Package information data is stored in the following format:
 
 ```json
@@ -71,14 +67,12 @@ Package information data is stored in the following format:
 
 Building
 ==========
-
 ```
 go get github.com/joehillen/packagebeat
 ```
 
 Testing
 =========
-
 **Unit Tests:**
 
 ```
