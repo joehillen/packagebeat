@@ -3,6 +3,7 @@ package beater
 import (
 	"bufio"
 	"io"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -84,17 +85,23 @@ func (pb *Packagebeat) collectPackages(manager string, cmd string, args ...strin
 const DPKG_PATH = "/usr/bin/dpkg-query"
 
 func (pb *Packagebeat) CollectDpkg() error {
-	logp.Info("packagebeat", "Collecting from dpkg")
-	return pb.collectPackages("dpkg",
-		DPKG_PATH, "--show", "--showformat",
-		"${Package} ${Version} ${Architecture} ${binary:Summary}\n")
+	if _, err := os.Stat(DPKG_PATH); err == nil {
+		logp.Info("packagebeat", "Collecting from dpkg")
+		return pb.collectPackages("dpkg",
+			DPKG_PATH, "--show", "--showformat",
+			"${Package} ${Version} ${Architecture} ${binary:Summary}\n")
+	}
+	return nil
 }
 
 const RPM_PATH = "/usr/bin/rpm"
 
 func (pb *Packagebeat) CollectRPM() error {
-	logp.Info("packagebeat", "Collecting from rpm")
-	return pb.collectPackages("rpm",
-		RPM_PATH, "-qa", "--queryformat",
-		"%{NAME} %{VERSION} %{ARCH} %{SUMMARY}\n")
+	if _, err := os.Stat(RPM_PATH); err == nil {
+		logp.Info("packagebeat", "Collecting from rpm")
+		return pb.collectPackages("rpm",
+			RPM_PATH, "-qa", "--queryformat",
+			"%{NAME} %{VERSION} %{ARCH} %{SUMMARY}\n")
+	}
+	return nil
 }

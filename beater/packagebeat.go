@@ -14,6 +14,9 @@ type Packagebeat struct {
 	PbConfig ConfigSettings
 	events   publisher.Client
 	done     chan struct{}
+
+	dpkg bool
+	rpm  bool
 }
 
 func New() *Packagebeat {
@@ -33,8 +36,22 @@ func (pb *Packagebeat) Config(b *beat.Beat) error {
 		pb.period = time.Duration(*pb.PbConfig.Input.Period) * time.Second
 	}
 
+	if pb.PbConfig.Input.Dpkg != nil {
+		pb.dpkg = *pb.PbConfig.Input.Dpkg
+	} else {
+		pb.dpkg = true
+	}
+
+	if pb.PbConfig.Input.Rpm != nil {
+		pb.rpm = *pb.PbConfig.Input.Rpm
+	} else {
+		pb.rpm = true
+	}
+
 	logp.Debug("packagebeat", "Init packagebeat")
 	logp.Debug("packagebeat", "Period %v\n", pb.period)
+	logp.Debug("packagebeat", "rpm %t\n", pb.rpm)
+	logp.Debug("packagebeat", "dpkg %t\n", pb.dpkg)
 
 	return nil
 }
@@ -47,8 +64,12 @@ func (pb *Packagebeat) Setup(b *beat.Beat) error {
 
 func (pb *Packagebeat) Run(b *beat.Beat) error {
 	for {
-		pb.CollectDpkg()
-		pb.CollectRPM()
+		if pb.dpkg {
+			pb.CollectDpkg()
+		}
+		if pb.rpm {
+			pb.CollectRPM()
+		}
 		time.Sleep(pb.period)
 	}
 }

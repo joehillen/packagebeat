@@ -3,8 +3,16 @@
 ############################# Input ############################################
 input:
   # In seconds, defines how often to package managers
-  # Default: 1 hour
+  # default: 1 hour
   period: 3600
+
+  # collect from dpkg if available
+  # default: true
+  dpkg: true
+
+  # collect from rpm if available
+  # default: true
+  rpm: true
 
 ###############################################################################
 ############################# Libbeat Config ##################################
