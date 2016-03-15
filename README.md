@@ -42,6 +42,12 @@ Install the mapping template before running Packagebeat:
 curl -XPUT 'http://localhost:9200/_template/packagebeat' -d@packagebeat.template.json
 ```
 
+Add the following to your favorite process manager:
+
+```
+packagebeat -c /etc/packagebeat/packagebeat.yml
+```
+
 Data
 =====
 
