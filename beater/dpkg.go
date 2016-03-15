@@ -4,65 +4,17 @@ import (
 	"bufio"
 	"io"
 	"os/exec"
-	"regexp"
-	"strings"
 	"time"
 
 	"github.com/elastic/beats/libbeat/common"
 	"github.com/elastic/beats/libbeat/logp"
 )
 
-const DPKG_PATH = "/usr/bin/dpkg-query"
-
-type dpkgPackage struct {
-	name         string
-	version      string
-	architecture string
-	description  string
-}
-
-func parseName(name string) string {
-	return strings.Split(name, ":")[0]
-}
-
-func parseLine(line string) *dpkgPackage {
-
-	words := regexp.MustCompile("\\s+").Split(line, 5)
-	if len(words) < 4 {
-		logp.Err("Not enough fields (%d) in dpkg line: %s", len(words), line)
-		return nil
-	}
-
-	if words[0] != "ii" {
-		return nil
-	}
-
-	var description = ""
-	if len(words) > 4 {
-		description = strings.Join(words[4:], " ")
-	}
-
-	return &dpkgPackage{
-		name:         parseName(words[1]),
-		version:      words[2],
-		architecture: words[3],
-		description:  description,
-	}
-
-}
-
-func parseOutput(output io.ReadCloser) chan dpkgPackage {
-	pkgs := make(chan dpkgPackage)
+func parseOutput(output io.ReadCloser) chan pkg {
+	pkgs := make(chan pkg)
 	scanner := bufio.NewScanner(output)
-	var cnt = 0
 	go func() {
 		for scanner.Scan() {
-			// skip first 4 lines of the header lines
-			if cnt < 5 {
-				cnt += 1
-				continue
-			}
-
 			pkg := parseLine(scanner.Text())
 			if pkg != nil {
 				pkgs <- *pkg
@@ -74,9 +26,11 @@ func parseOutput(output io.ReadCloser) chan dpkgPackage {
 }
 
 func (pb *Packagebeat) CollectDpkg() error {
-	logp.Info("packagebeat", "Collection packages from dpkg")
-
-	dpkg := exec.Command(DPKG_PATH, "--list")
+	logp.Info("packagebeat", "Collecting packages from dpkg")
+	now := common.Time(time.Now())
+	dpkg := exec.Command(
+		"/usr/bin/dpkg-query", "--show", "--showformat",
+		"${Package} ${Version} ${Architecture} ${binary:Summary}\n")
 	dpkgOutput, err := dpkg.StdoutPipe()
 	if err != nil {
 		logp.Err("%v", err)
@@ -86,12 +40,7 @@ func (pb *Packagebeat) CollectDpkg() error {
 		logp.Err("%v", err)
 		return err
 	}
-
-	now := common.Time(time.Now())
-
-	pkgs := parseOutput(dpkgOutput)
-
-	for pkg := range pkgs {
+	for pkg := range parseOutput(dpkgOutput) {
 		pb.events.PublishEvent(common.MapStr{
 			"@timestamp":   now,
 			"type":         "package",
@@ -99,7 +48,7 @@ func (pb *Packagebeat) CollectDpkg() error {
 			"name":         pkg.name,
 			"version":      pkg.version,
 			"architecture": pkg.architecture,
-			"description":  pkg.description,
+			"summary":      pkg.summary,
 		})
 	}
 	return nil
