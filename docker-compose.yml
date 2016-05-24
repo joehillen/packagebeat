@@ -18,20 +18,20 @@ kibana:
 debian:
   build: docker-compose.d/debian
   volumes:
-    - .:/mnt/packagebeat:ro
+    - .:/mnt/packagebeat:rw
   links:
     - elasticsearch
 
 fedora:
   build: docker-compose.d/fedora
   volumes:
-    - .:/mnt/packagebeat:ro
+    - .:/mnt/packagebeat:rw
   links:
     - elasticsearch
 
 centos:
   build: docker-compose.d/centos
   volumes:
-    - .:/mnt/packagebeat:ro
+    - .:/mnt/packagebeat:rw
   links:
     - elasticsearch
