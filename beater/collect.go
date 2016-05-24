@@ -79,6 +79,7 @@ func (pb *Packagebeat) collectPackages(manager string, cmd string, args ...strin
 			"summary":      pkg.summary,
 		})
 	}
+	defer x.Wait()
 	return nil
 }
 
