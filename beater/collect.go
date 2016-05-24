@@ -101,7 +101,7 @@ func (pb *Packagebeat) CollectRPM() error {
 		logp.Info("packagebeat", "Collecting from rpm")
 		return pb.collectPackages("rpm",
 			RPM_PATH, "-qa", "--queryformat",
-			"%{NAME} %{VERSION} %{ARCH} %{SUMMARY}\n")
+			"%{NAME} %{VERSION}-%{RELEASE} %{ARCH} %{SUMMARY}\n")
 	}
 	return nil
 }
