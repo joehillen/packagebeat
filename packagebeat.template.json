@@ -15,7 +15,9 @@
               "index": "analyzed",
               "type": "{dynamic_type}"
             }
-          },
+          }
+        },
+        {
           "catchall": {
             "match": "*",
             "mapping": {
