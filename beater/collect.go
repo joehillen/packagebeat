@@ -79,6 +79,10 @@ func (pb *Packagebeat) collectPackages(manager string, cmd string, args ...strin
 			"summary":      pkg.summary,
 		})
 	}
+        if err := x.Wait(); err != nil {
+                logp.Err("%v", err)
+                return err
+        }
 	return nil
 }
 
