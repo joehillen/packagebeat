@@ -1,0 +1,10 @@
+package: github.com/joehillen/packagebeat
+import:
+- package: github.com/elastic/beats
+  version: v1.1.2
+  subpackages:
+  - libbeat/beat
+  - libbeat/common
+  - libbeat/logp
+  - libbeat/publisher
+  - libbeat/cfgfile

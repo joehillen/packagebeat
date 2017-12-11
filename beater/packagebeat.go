@@ -57,7 +57,7 @@ func (pb *Packagebeat) Config(b *beat.Beat) error {
 }
 
 func (pb *Packagebeat) Setup(b *beat.Beat) error {
-	pb.events = b.Publisher.Connect()
+	pb.events = b.Events
 	pb.done = make(chan struct{})
 	return nil
 }
